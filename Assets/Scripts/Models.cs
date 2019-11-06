@@ -33,6 +33,8 @@ public interface IToTake
 
     void Take(ICanTake take);
     void Leave();
+
+    
 }
 
 public class Product : MonoBehaviour, ICanTake
@@ -47,16 +49,51 @@ public class Product : MonoBehaviour, ICanTake
     /// </summary>
     public void LeaveStayObj()
     {
-        OnStayObj = null;
+        GameObj.transform.localPosition = new Vector3(0, 0, 0);
+        if (OnStayObj != null)
+        {
+            OnStayObj.TakeObjClass = null;
+            OnStayObj = null;
+        }
     }
 
-    public Product()
+
+    private void Awake()
+    {
+        GameObj.transform.localPosition = new Vector3(0, 0, 0);
+    }
+}
+
+
+public class Posuda : MonoBehaviour, ICanTake, IToTake
+{
+    public GameObject GameObj { get { return this.gameObject; } }
+    /// <summary>
+    /// На чем стоит
+    /// </summary>
+    public IToTake OnStayObj { get; set; }
+    /// <summary>
+    /// тут тот, на ком он стоит, отписывается
+    /// </summary>
+    public void LeaveStayObj()
+    {
+        GameObj.transform.localPosition = new Vector3(0, 0, 0);
+        if (OnStayObj != null)
+        {
+            OnStayObj.TakeObjClass = null;
+            OnStayObj = null;
+        }
+    }
+
+    private void Awake()
     {
         GameObj.transform.localPosition = new Vector3(0, 0, 0);
     }
 
 
-    /*public GameObject PositionTake { get; set; }
+
+    public GameObject positionTake;     //+
+    public GameObject PositionTake { get { return positionTake; } set { positionTake = value; } }   //+
     /// <summary>
     /// Кто на нём
     /// </summary>
@@ -64,15 +101,16 @@ public class Product : MonoBehaviour, ICanTake
 
     public void Take(ICanTake take)
     {
-        TakeObjClass = take;
+        if (TakeObjClass != null) return;
+        take.GameObj.transform.SetParent(PositionTake.transform);
         take.LeaveStayObj();
-        take.gameObj.transform.position = PositionTake.transform.position;
+        TakeObjClass = take;
+        take.OnStayObj = this;
     }
-
     public void Leave()
     {
         TakeObjClass = null;
-    }*/
+    }
 }
 
 

@@ -23,15 +23,7 @@ public class Player : MonoBehaviour, IToTake
         KeyDown();
     }
 
-    public void Take(ICanTake take)
-    {
-
-        take.GameObj.transform.SetParent(PositionTake.transform);
-        //take.GameObj.transform.localPosition = new Vector3(0, 0, 0);
-        //take.OnStayObj.Leave();
-        take.LeaveStayObj();
-        TakeObjClass = take;
-    }
+    
 
     public void Leave()
     {
@@ -103,12 +95,21 @@ public class Player : MonoBehaviour, IToTake
         }
     }
 
+    public void Take(ICanTake take)
+    {
+        if (TakeObjClass != null) return;
+        take.GameObj.transform.SetParent(PositionTake.transform);
+        take.LeaveStayObj();
+        TakeObjClass = take;
+        take.OnStayObj = this;
+    }
+
     void IsTake(Collider other)
     {
         ICanTake take = other.gameObject.GetComponent(typeof(ICanTake)) as ICanTake;
         if (take != null)
         {
-            take.Take(this.gameObject);
+            Take(take);
             act = true;
         }        
     }
@@ -116,9 +117,9 @@ public class Player : MonoBehaviour, IToTake
     void IsPut(Collider other)
     {
         IToTake take = other.gameObject.GetComponent(typeof(IToTake)) as IToTake;
-        if (take != null)
+        if (take != null && take != TakeObjClass)
         {
-            take.Take(TakeObj, TakeObjClass);
+            take.Take(TakeObjClass);
             act = true;
             //TakeObjClass.Take(other.gameObject);
         }

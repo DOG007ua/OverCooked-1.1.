@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Table : MonoBehaviour
+public class Table : MonoBehaviour, IToTake
 {
     public GameObject positionTake;
     public GameObject PositionTake { get { return positionTake; } set { positionTake = value; } }
-    public GameObject TakeObj { get; set; }
     public ICanTake TakeObjClass { get; set; }
     void Start()
     {
@@ -16,21 +15,19 @@ public class Table : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int A1 = 0;
     }
 
-    public void Take(GameObject obj, ICanTake take)
+    public void Take(ICanTake take)
     {
-        obj.transform.SetParent(PositionTake.transform);
-        obj.transform.localPosition = new Vector3(0, 0, 0);
-        take.OnStayObj.Leave();
-        TakeObj = obj;
+        if (TakeObjClass != null) return;
+        take.GameObj.transform.SetParent(PositionTake.transform);
+        take.LeaveStayObj();
         TakeObjClass = take;
+        take.OnStayObj = this;
     }
 
     public void Leave()
     {
-        TakeObj = null;
         TakeObjClass = null;
     }
 }

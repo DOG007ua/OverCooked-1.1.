@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Tomato : Product
 {
-
+    private void Update()
+    {
+        GameObject o = GameObj;
+    }
 }
