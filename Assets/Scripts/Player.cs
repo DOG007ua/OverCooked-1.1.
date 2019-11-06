@@ -19,7 +19,7 @@ public class Player : MonoBehaviour, IToTake
 	// Update is called once per frame
 	void Update () 
     {
-        act = false;
+        act = false;;
         KeyDown();
     }
 
